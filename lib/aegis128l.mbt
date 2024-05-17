@@ -13,7 +13,7 @@ pub fn Aegis128L::new(
   @assertion.assert_true(nonce.length() == 16)?
   @assertion.assert_true(tag_length == 16 || tag_length == 32)?
   //
-  let c0_bytes_int = [
+  let c0_bytes_int: Array[Int] = [
     0x00,
     0x01,
     0x01,
@@ -33,7 +33,7 @@ pub fn Aegis128L::new(
   ]
   let c0_bytes = bytes_array_to_bytes(c0_bytes_int)
   //
-  let c1_bytes_int = [
+  let c1_bytes_int : Array[Int] = [
     0xdb - 256,
     0x3d,
     0x18,
