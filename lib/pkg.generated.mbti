@@ -1,0 +1,54 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "jedisct1/aegis/lib"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+#derive(@debug.Debug)
+pub struct Aegis128L {
+  state : FixedArray[Int32]
+  tag_length : Int32
+  mut finalized : Bool
+}
+pub fn Aegis128L::decrypt_detached(Self, AuthenticatedCiphertext, Bytes?) -> Bytes raise
+pub fn Aegis128L::encrypt_detached(Self, Bytes?, Bytes?) -> AuthenticatedCiphertext raise
+pub fn Aegis128L::new(Bytes, Bytes, Int32) -> Self raise
+
+#derive(@debug.Debug)
+pub struct Aegis256 {
+  state : FixedArray[Int32]
+  tag_length : Int32
+  mut finalized : Bool
+}
+pub fn Aegis256::decrypt_detached(Self, AuthenticatedCiphertext, Bytes?) -> Bytes raise
+pub fn Aegis256::encrypt_detached(Self, Bytes?, Bytes?) -> AuthenticatedCiphertext raise
+pub fn Aegis256::new(Bytes, Bytes, Int32) -> Self raise
+
+#derive(Default, @debug.Debug)
+pub(all) struct AesBlock {
+  a : Int32
+  b : Int32
+  c : Int32
+  d : Int32
+}
+pub fn AesBlock::clone(Self) -> Self
+pub fn AesBlock::encrypt(Self, Self) -> Self
+pub fn AesBlock::from_bytes(Bytes) -> Self
+pub fn AesBlock::land(Self, Self) -> Self
+pub fn AesBlock::to_bytes(Self) -> Bytes
+pub fn AesBlock::xor(Self, Self) -> Self
+
+pub(all) struct AuthenticatedCiphertext {
+  ciphertext : Bytes
+  tag : Bytes
+}
+
+// Type aliases
+
+// Traits

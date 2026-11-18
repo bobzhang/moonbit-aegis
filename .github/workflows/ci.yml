@@ -1,0 +1,29 @@
+name: CI
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        moonbit: [latest, pre-release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install MoonBit
+        env:
+          MOONBIT_INSTALL_VERSION: ${{ matrix.moonbit }}
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash -s -- "${{ matrix.moonbit }}"
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - run: moon version --all
+      - run: moon check --target all --deny-warn
+      - run: moon test --target all
+      - run: moon test --target all --release
+      - run: moon fmt --check
+      - run: moon info --target all
+      - run: git diff --exit-code
