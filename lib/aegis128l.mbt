@@ -1,26 +1,27 @@
 ///|
 /// The state is a flat list of 32-bit words.
 /// The eight state blocks come first, followed by the two message blocks that `update` mixes in.
-const S128L_M0 : Int = 32
+const S128L_M0 : Int32 = 32
 
 ///|
-const S128L_M1 : Int = 36
+const S128L_M1 : Int32 = 36
 
 ///|
-const S128L_WORDS : Int = 40
+const S128L_WORDS : Int32 = 40
 
 ///|
+#derive(Debug)
 pub struct Aegis128L {
-  state : FixedArray[Int]
-  tag_length : Int
+  state : FixedArray[Int32]
+  tag_length : Int32
   mut finalized : Bool
-} derive(Debug)
+}
 
 ///|
 pub fn Aegis128L::new(
   key : Bytes,
   nonce : Bytes,
-  tag_length : Int,
+  tag_length : Int32,
 ) -> Aegis128L raise {
   assert_true(key.length() == 16)
   assert_true(nonce.length() == 16)
@@ -354,7 +355,7 @@ fn Aegis128L::update(self : Aegis128L) -> Unit {
 ///|
 /// Mixes the 32 bytes of `src` starting at `offset` into the state.
 /// The caller makes sure they're all there.
-fn Aegis128L::absorb(self : Aegis128L, src : Bytes, offset : Int) -> Unit {
+fn Aegis128L::absorb(self : Aegis128L, src : Bytes, offset : Int32) -> Unit {
   let st = self.state
   for j in 0..<4 {
     st.unsafe_set(S128L_M0 + j, load_le32_bytes(src, offset + 4 * j))
@@ -370,7 +371,7 @@ fn Aegis128L::enc(
   self : Aegis128L,
   src : Bytes,
   out : FixedArray[Byte],
-  offset : Int,
+  offset : Int32,
 ) -> Unit {
   let st = self.state
   for j in 0..<4 {
@@ -396,7 +397,7 @@ fn Aegis128L::dec(
   self : Aegis128L,
   src : Bytes,
   out : FixedArray[Byte],
-  offset : Int,
+  offset : Int32,
 ) -> Unit {
   let st = self.state
   for j in 0..<4 {
@@ -420,7 +421,7 @@ fn Aegis128L::dec(
 fn Aegis128L::dec_last(
   self : Aegis128L,
   pad : FixedArray[Byte],
-  cn_length : Int,
+  cn_length : Int32,
 ) -> Unit {
   let st = self.state
   for j in 0..<4 {
@@ -442,8 +443,8 @@ fn Aegis128L::dec_last(
 ///|
 fn Aegis128L::mac(
   self : Aegis128L,
-  ad_len_bytes : Int,
-  msg_len_bytes : Int,
+  ad_len_bytes : Int32,
+  msg_len_bytes : Int32,
 ) -> Bytes {
   self.finalized = true
   let st = self.state
@@ -471,7 +472,7 @@ fn Aegis128L::mac(
 }
 
 ///|
-fn Aegis128L::absorb_ad(self : Aegis128L, ad : Bytes?) -> Int {
+fn Aegis128L::absorb_ad(self : Aegis128L, ad : Bytes?) -> Int32 {
   guard ad is Some(ad) else { return 0 }
   let ad_length = ad.length()
   let mut i = 0

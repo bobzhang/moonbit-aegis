@@ -1,5 +1,5 @@
 ///|
-let lut0 : FixedArray[Int] = words_from([
+let lut0 : FixedArray[Int32] = words_from([
   0xa56363c6, 0x847c7cf8, 0x997777ee, 0x8d7b7bf6, 0x0df2f2ff, 0xbd6b6bd6, 0xb16f6fde,
   0x54c5c591, 0x50303060, 0x03010102, 0xa96767ce, 0x7d2b2b56, 0x19fefee7, 0x62d7d7b5,
   0xe6abab4d, 0x9a7676ec, 0x45caca8f, 0x9d82821f, 0x40c9c989, 0x877d7dfa, 0x15fafaef,
@@ -40,7 +40,7 @@ let lut0 : FixedArray[Int] = words_from([
 ])
 
 ///|
-let lut1 : FixedArray[Int] = words_from([
+let lut1 : FixedArray[Int32] = words_from([
   0x6363c6a5, 0x7c7cf884, 0x7777ee99, 0x7b7bf68d, 0xf2f2ff0d, 0x6b6bd6bd, 0x6f6fdeb1,
   0xc5c59154, 0x30306050, 0x01010203, 0x6767cea9, 0x2b2b567d, 0xfefee719, 0xd7d7b562,
   0xabab4de6, 0x7676ec9a, 0xcaca8f45, 0x82821f9d, 0xc9c98940, 0x7d7dfa87, 0xfafaef15,
@@ -81,7 +81,7 @@ let lut1 : FixedArray[Int] = words_from([
 ])
 
 ///|
-let lut2 : FixedArray[Int] = words_from([
+let lut2 : FixedArray[Int32] = words_from([
   0x63c6a563, 0x7cf8847c, 0x77ee9977, 0x7bf68d7b, 0xf2ff0df2, 0x6bd6bd6b, 0x6fdeb16f,
   0xc59154c5, 0x30605030, 0x01020301, 0x67cea967, 0x2b567d2b, 0xfee719fe, 0xd7b562d7,
   0xab4de6ab, 0x76ec9a76, 0xca8f45ca, 0x821f9d82, 0xc98940c9, 0x7dfa877d, 0xfaef15fa,
@@ -122,7 +122,7 @@ let lut2 : FixedArray[Int] = words_from([
 ])
 
 ///|
-let lut3 : FixedArray[Int] = words_from([
+let lut3 : FixedArray[Int32] = words_from([
   0xc6a56363, 0xf8847c7c, 0xee997777, 0xf68d7b7b, 0xff0df2f2, 0xd6bd6b6b, 0xdeb16f6f,
   0x9154c5c5, 0x60503030, 0x02030101, 0xcea96767, 0x567d2b2b, 0xe719fefe, 0xb562d7d7,
   0x4de6abab, 0xec9a7676, 0x8f45caca, 0x1f9d8282, 0x8940c9c9, 0xfa877d7d, 0xef15fafa,
@@ -164,7 +164,7 @@ let lut3 : FixedArray[Int] = words_from([
 
 ///|
 #inline
-fn lut_get(lut : FixedArray[Int], x : Int) -> Int {
+fn lut_get(lut : FixedArray[Int32], x : Int32) -> Int32 {
   // The mask keeps the index inside the table
   lut.unsafe_get(x & 0xff)
 }
@@ -173,7 +173,7 @@ fn lut_get(lut : FixedArray[Int], x : Int) -> Int {
 /// Works out one word of an AES round from four input words, leaving out the round key.
 /// Each output word takes the same four inputs, starting from a different one.
 #inline
-fn mix(w0 : Int, w1 : Int, w2 : Int, w3 : Int) -> Int {
+fn mix(w0 : Int32, w1 : Int32, w2 : Int32, w3 : Int32) -> Int32 {
   lut_get(lut0, w0) ^
   lut_get(lut1, w1 >> 8) ^
   lut_get(lut2, w2 >> 16) ^
@@ -181,13 +181,14 @@ fn mix(w0 : Int, w1 : Int, w2 : Int, w3 : Int) -> Int {
 }
 
 ///|
+#derive(Debug, Default)
 #valtype
 pub(all) struct AesBlock {
-  a : Int
-  b : Int
-  c : Int
-  d : Int
-} derive(Debug, Default)
+  a : Int32
+  b : Int32
+  c : Int32
+  d : Int32
+}
 
 ///|
 pub fn AesBlock::from_bytes(bytes : Bytes) -> AesBlock {

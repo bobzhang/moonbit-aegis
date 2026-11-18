@@ -1,23 +1,24 @@
 ///|
 /// The state is a flat list of 32-bit words.
 /// The six state blocks come first, followed by the message block that `update` mixes in.
-const S256_M : Int = 24
+const S256_M : Int32 = 24
 
 ///|
-const S256_WORDS : Int = 28
+const S256_WORDS : Int32 = 28
 
 ///|
+#derive(Debug)
 pub struct Aegis256 {
-  state : FixedArray[Int]
-  tag_length : Int
+  state : FixedArray[Int32]
+  tag_length : Int32
   mut finalized : Bool
-} derive(Debug)
+}
 
 ///|
 pub fn Aegis256::new(
   key : Bytes,
   nonce : Bytes,
-  tag_length : Int,
+  tag_length : Int32,
 ) -> Aegis256 raise {
   assert_true(key.length() == 32)
   assert_true(nonce.length() == 32)
@@ -281,7 +282,7 @@ fn Aegis256::update(self : Aegis256) -> Unit {
 ///|
 /// Mixes the 16 bytes of `src` starting at `offset` into the state.
 /// The caller makes sure they're all there.
-fn Aegis256::absorb(self : Aegis256, src : Bytes, offset : Int) -> Unit {
+fn Aegis256::absorb(self : Aegis256, src : Bytes, offset : Int32) -> Unit {
   let st = self.state
   for j in 0..<4 {
     st.unsafe_set(S256_M + j, load_le32_bytes(src, offset + 4 * j))
@@ -296,7 +297,7 @@ fn Aegis256::enc(
   self : Aegis256,
   src : Bytes,
   out : FixedArray[Byte],
-  offset : Int,
+  offset : Int32,
 ) -> Unit {
   let st = self.state
   for j in 0..<4 {
@@ -319,7 +320,7 @@ fn Aegis256::dec(
   self : Aegis256,
   src : Bytes,
   out : FixedArray[Byte],
-  offset : Int,
+  offset : Int32,
 ) -> Unit {
   let st = self.state
   for j in 0..<4 {
@@ -340,7 +341,7 @@ fn Aegis256::dec(
 fn Aegis256::dec_last(
   self : Aegis256,
   pad : FixedArray[Byte],
-  cn_length : Int,
+  cn_length : Int32,
 ) -> Unit {
   let st = self.state
   for j in 0..<4 {
@@ -357,8 +358,8 @@ fn Aegis256::dec_last(
 ///|
 fn Aegis256::mac(
   self : Aegis256,
-  ad_len_bytes : Int,
-  msg_len_bytes : Int,
+  ad_len_bytes : Int32,
+  msg_len_bytes : Int32,
 ) -> Bytes {
   self.finalized = true
   let st = self.state
@@ -385,7 +386,7 @@ fn Aegis256::mac(
 }
 
 ///|
-fn Aegis256::absorb_ad(self : Aegis256, ad : Bytes?) -> Int {
+fn Aegis256::absorb_ad(self : Aegis256, ad : Bytes?) -> Int32 {
   guard ad is Some(ad) else { return 0 }
   let ad_length = ad.length()
   let mut i = 0
